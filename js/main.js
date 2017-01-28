@@ -2,7 +2,7 @@
 var map;
 var marker;
 function error_handler() {
-  alert("The Google Maps API has failed. Please try again.");
+  alert("The Google Maps API has failed. Please check your internet connection and try again later.");
 }
 
 function createMarker(latlng) {
@@ -14,40 +14,41 @@ function createMarker(latlng) {
   return marker;
 }
 
+//Model
 var locations = [{
-    name: "Indoor Extreme Sports Paintball & Laser Tag",
-    address: "47-11 Van Dam St, Long Island City, NY 11101",
-    lat: 40.742171,
-    lng: -73.933568,
-    yelp_website: "https://api.yelp.com/v2/business/indoor-extreme-sports-long-island-city"
+    name: "Café Integral",
+    address: "149 Elizabeth St, Little Italy, New York, NY 10012",
+    lat: 40.720428,
+    lng: -73.995315,
+    yelp_website: "https://api.yelp.com/v2/business/cafe-integral-new-york-2"
   },
   {
-    name: "Five Leaves",
-    address: "18 Bedford Ave, Brooklyn, NY 11222",
-    lat: 40.723722,
-    lng: -73.951628,
-    yelp_website: "https://api.yelp.com/v2/business/five-leaves-brooklyn-2"
+    name: "Little Canal",
+    address: "26 Canal St, Lower East Side, New York, NY 10002",
+    lat: 40.71431,
+    lng: -73.99041,
+    yelp_website: "https://api.yelp.com/v2/business/little-canal-new-york-2"
   },
   {
-    name: "UPS Customer Center - MASPETH",
-    address: "5613 48th St, Maspeth, NY 11378",
-    lat: 40.727501,
-    lng: -73.921643,
-    yelp_website: "https://api.yelp.com/v2/business/ups-customer-center-maspeth"
+    name: "Coffee Project New York",
+    address: "239 E 5th St, East Village, New York, NY 10003",
+    lat: 40.72699,
+    lng: -73.98922,
+    yelp_website: "https://api.yelp.com/v2/business/coffee-project-new-york-new-york"
   },
   {
-    name: "Mount Zion Cemetery",
-    address: "59-63 54th Ave, Maspeth, NY 11378",
-    lat: 40.730685,
-    lng: -73.906576,
-    yelp_website: "https://api.yelp.com/v2/business/mount-zion-cemetery-maspeth"
+    name: "Spreadhouse Cafe",
+    address: "116 Suffolk St, Lower East Side, New York, NY 10002",
+    lat: 40.71891,
+    lng: -73.985847,
+    yelp_website: "https://api.yelp.com/v2/business/spreadhouse-cafe-new-york-3"
   },
   {
-    name: "Calvary Cemetery",
-    address: "4902 Laurel Hill Blvd, Woodside, NY 11377",
-    lat: 40.7351807,
-    lng: -73.91721889999999,
-    yelp_website: "https://api.yelp.com/v2/business/calvary-cemetery-woodside"
+    name: "Prologue Coffee Room",
+    address: "120C Lafayette St, SoHo, New York, NY 10013",
+    lat: 40.7189198956263,
+    lng: -74.0004087871495,
+    yelp_website: "https://api.yelp.com/v2/business/prologue-coffee-room-new-york-2"
   }
 ];
 
@@ -55,19 +56,23 @@ function nonce_generate() {
     return (Math.floor(Math.random() * 1e12).toString());
 }
 
-// Invoke Yelp API
+// Invoke Yelp API by using oauth-signature-js(https://github.com/bettiolo/oauth-signature-js)
 var yelp_api = function(i) {
   var yelp_url = locations[i].yelp_website;
   var parameters = {
-      oauth_consumer_key: 'Ym8uo_wnWdzgxbD30Ht3Gw',
-      oauth_token: 'Buej2WYz709jlUxKhGz91gfnhDGOjLBg',
+      oauth_consumer_key: 'jMkHVdUGQ4rERQEgvA44ag',
+      oauth_token: 'orJhcYm__MlP9Df6T4KjbeklYJVsbhIg',
       oauth_nonce: nonce_generate(),
       oauth_timestamp: Math.floor(Date.now() / 1000),
       oauth_signature_method: 'HMAC-SHA1',
       oauth_version: '1.0',
       callback: 'cb'
   };
-  var encodedSignature = oauthSignature.generate('GET', yelp_url, parameters, 'mGGqwLqFKB5MGGEASJ3rnvT7Qx0', 'rX2fF33xyhSNQhJd7B8y3xKCAyQ');
+  var consumerSecret = 'CF3dFGmnNahEB9JkozBC-_vsSN4';
+  var tokenSecret = '9-VSVbV7sJNKZZy0t1twi1qCbLc';
+  // generates a RFC 3986 encoded, BASE64 encoded HMAC-SHA1 hash
+  var encodedSignature = oauthSignature.generate('GET', yelp_url, parameters, consumerSecret, tokenSecret);
+  // generates a BASE64 encode HMAC-SHA1 hash
   parameters.oauth_signature = encodedSignature;
   var settings = {
       url: yelp_url,
@@ -94,8 +99,8 @@ for(var i = 0; i < locations.length; i++) {
 // Initial Google Map
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 40.730610, lng: -73.935242},
-    zoom: 13
+    center: {lat: 40.720428, lng: -73.995313},
+    zoom: 14
   });
 
   var infowindow = new google.maps.InfoWindow({
